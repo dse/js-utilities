@@ -8,20 +8,22 @@
 if (!Function.prototype.bind) {
 	Function.prototype.bind = function (context) {
 		var nop, __method, args, bound;
-		if (arguments.length < 2 && Object.isUndefined(arguments[0])) {
+		if (arguments.length < 2 && typeof arguments[0] === "undefined") {
 			return this;
 		}
-		if (!Object.isFunction(this)) {
+		// if (!Object.isFunction(this)) {
+		if (Object.prototype.toString.call(object) !== '[object Function]') {
 			throw new TypeError("The object is not callable.");
 		}
 		nop = function() {};
 		__method = this;
-		args = slice.call(arguments, 1);
+		args = Array.prototype.slice.call(arguments, 1);
 		bound = function() {
-			var a = merge(args, arguments);
+			var a, c;
+			a = merge(args, arguments);
 			// Ignore the supplied context when the bound function is called with
 			// the "new" keyword.
-			var c = this instanceof bound ? this : context;
+			c = this instanceof bound ? this : context;
 			return __method.apply(c, a);
 		};
 		nop.prototype   = this.prototype;
