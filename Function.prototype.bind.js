@@ -20,7 +20,7 @@ if (!Function.prototype.bind) {
 		args = Array.prototype.slice.call(arguments, 1);
 		bound = function() {
 			var a, c;
-			a = merge(args, arguments);
+			a = update(Array.prototype.slice.call(args, 0), arguments);
 			// Ignore the supplied context when the bound function is called with
 			// the "new" keyword.
 			c = this instanceof bound ? this : context;
