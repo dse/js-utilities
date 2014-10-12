@@ -3,32 +3,32 @@
 // Lines above are for jslint, the JavaScript verifier.  http://www.jslint.com/
 //-----------------------------------------------------------------------------
 
-// based on
+// formerly based on
 // https://github.com/sstephenson/prototype/blob/e3d5200cef3236b257ddcfb1eb3eabc5c586bedd/src/prototype/lang/function.js
+
+// https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function/bind
 if (!Function.prototype.bind) {
-	Function.prototype.bind = function (context) {
-		var nop, __method, args, bound;
-		if (arguments.length < 2 && typeof arguments[0] === "undefined") {
-			return this;
-		}
-		// if (!Object.isFunction(this)) {
-		if (Object.prototype.toString.call(object) !== '[object Function]') {
-			throw new TypeError("The object is not callable.");
-		}
-		nop = function() {};
-		__method = this;
-		args = Array.prototype.slice.call(arguments, 1);
-		bound = function() {
-			var a, c;
-			a = update(Array.prototype.slice.call(args, 0), arguments);
-			// Ignore the supplied context when the bound function is called with
-			// the "new" keyword.
-			c = this instanceof bound ? this : context;
-			return __method.apply(c, a);
-		};
-		nop.prototype   = this.prototype;
-		bound.prototype = new nop();
-		return bound;
-	};
+  Function.prototype.bind = function(oThis) {
+    if (typeof this !== 'function') {
+      // closest thing possible to the ECMAScript 5
+      // internal IsCallable function
+      throw new TypeError('Function.prototype.bind - what is trying to be bound is not callable');
+    }
+
+    var aArgs   = Array.prototype.slice.call(arguments, 1),
+        fToBind = this,
+        fNOP    = function() {},
+        fBound  = function() {
+          return fToBind.apply(this instanceof fNOP && oThis
+                 ? this
+                 : oThis,
+                 aArgs.concat(Array.prototype.slice.call(arguments)));
+        };
+
+    fNOP.prototype = this.prototype;
+    fBound.prototype = new fNOP();
+
+    return fBound;
+  };
 }
 
